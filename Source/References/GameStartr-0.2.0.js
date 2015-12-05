@@ -29,7 +29,8 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
 var GameStartr;
 (function (GameStartr_1) {
@@ -319,7 +320,10 @@ var GameStartr;
                 "MapScreener": GameStarter.MapScreener,
                 "screenAttributes": GameStarter.settings.maps.screenAttributes,
                 "onSpawn": GameStarter.settings.maps.onSpawn,
-                "onUnspawn": GameStarter.settings.maps.onUnspawn
+                "onUnspawn": GameStarter.settings.maps.onUnspawn,
+                "stretchAdd": GameStarter.settings.maps.stretchAdd,
+                "afterAdd": GameStarter.settings.maps.afterAdd,
+                "commandScope": GameStarter
             });
         };
         /**

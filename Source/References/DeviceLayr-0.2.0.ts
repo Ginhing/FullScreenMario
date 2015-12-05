@@ -84,8 +84,8 @@ declare module DeviceLayr {
 
     export interface IDeviceLayerSettings {
         InputWriter: InputWritr.IInputWritr;
-        triggers: ITriggers;
-        aliases: IAliases;
+        triggers?: ITriggers;
+        aliases?: IAliases;
     }
 
     export interface IDeviceLayr {
@@ -214,9 +214,19 @@ module DeviceLayr {
          * @param {IDeviceLayerSettings} settings
          */
         constructor(settings: IDeviceLayerSettings) {
+            if (typeof settings === "undefined") {
+                throw new Error("No settings object given to DeviceLayr.");
+            }
+            if (typeof settings.InputWriter === "undefined") {
+                throw new Error("No InputWriter given to DeviceLayr.");
+            }
+
             this.InputWritr = settings.InputWriter;
-            this.triggers = settings.triggers;
-            this.aliases = settings.aliases;
+            this.triggers = settings.triggers || {};
+            this.aliases = settings.aliases || {
+                "on": "on",
+                "off": "off"
+            };
 
             this.gamepads = [];
         }
@@ -308,11 +318,11 @@ module DeviceLayr {
             var mapping: IControllerMapping = DeviceLayr.controllerMappings[gamepad.mapping || "standard"],
                 i: number;
 
-            for (i = 0; i < mapping.axes.length; i += 1) {
+            for (i = Math.min(mapping.axes.length, gamepad.axes.length) - 1; i >= 0; i -= 1) {
                 this.activateAxisTrigger(gamepad, mapping.axes[i].name, mapping.axes[i].axis, gamepad.axes[i]);
             }
 
-            for (i = 0; i < mapping.buttons.length; i += 1) {
+            for (i = Math.min(mapping.buttons.length, gamepad.buttons.length) - 1; i >= 0; i -= 1) {
                 this.activateButtonTrigger(gamepad, mapping.buttons[i], gamepad.buttons[i].pressed);
             }
         }
